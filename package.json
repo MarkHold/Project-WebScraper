@@ -1,0 +1,16 @@
+{
+  "name": "ma223ik-examinationNEW-1",
+  "version": "0.0.1",
+  "description": "Webbscraper for assignment",
+  "main": "app.js",
+  "author": "Markus Lykonhold",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/1dv523/ma223ik-examination-1"
+  },
+  "dependencies": {
+    "cheerio": "^0.22.0",
+    "express": "latest",
+    "request": "latest"
+  }
+}
