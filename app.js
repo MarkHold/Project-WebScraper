@@ -9,10 +9,10 @@ var scrape = function() {
     var cheerio = require('cheerio');
     var app = express();
 
-    var title;
-    var release;
-    var rating;
-    var json = {title: "", release: "", rating: ""};
+    var firstLink;
+    var secondLink;
+    var thirdLink;
+    var json = {firstLink: "", secondLink: "", thirdLink: ""};
 
     var SubmitButton = document.getElementById("linkButton");
 
@@ -43,39 +43,24 @@ var scrape = function() {
 
                 var cher = cheerio.load(html);
 
-                //the variables that we want to print out
-
-
                 //We choose the thing that is closest to the object we are looking to obtain
                 //in this case, it was the OL (ordered list)
                 cher('.ol').filter(function () {
 
                     //we store the data we scrape in this variable.
-                    var data = $(this);
+                    var data = cher(this);
 
-                    //noticing that the data we need is in the first child, we use jquery to locate it
-                    title = data.children().first().text();
+                    //process to take out the link for the first section
+                    firstLink = data.children().first().text();
 
-                    //same process for release date
-                    release = data.children().last().children().text();
+                    //same process for the last link
+                    thirdLink = data.children().first().text();
 
 
                     //now we store it in the json object
-                    json.release = release;
-                    json.title = title;
+                    json.firstLink = firstLink;
+                    json.thirdLink = thirdLink;
                 })
-
-                //we write a new filter function since the rating is in a different section of the DOM.
-                cher('.star-box-giga-star').filter(function () {
-                    var data = cher(this);
-
-                    //since the star box etc class is exactly where it is, we just need to get the text()
-                    rating = data.text();
-
-                    json.rating = rating;
-
-                })
-
             }
 
         })
