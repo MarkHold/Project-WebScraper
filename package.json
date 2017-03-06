@@ -11,6 +11,6 @@
   "dependencies": {
     "cheerio": "^0.22.0",
     "express": "latest",
-    "request": "latest"
+    "request": "^2.79.0"
   }
 }

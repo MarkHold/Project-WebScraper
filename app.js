@@ -2,70 +2,118 @@
  * Created by markuslyconhold on 17/11/16.
  */
 
-var scrape = function() {
-    
-    var request = require('request');
-    var express = require('express');
-    var cheerio = require('cheerio');
-    var app = express();
+/*
+var express = require('express');
+var fs      = require('fs');
+var request = require('request');
+var cheerio = require('cheerio');
+var app     = express();
 
-    var firstLink;
-    var secondLink;
-    var thirdLink;
-    var json = {firstLink: "", secondLink: "", thirdLink: ""};
+app.get('/scrape', function(req, res){
+    // Let's scrape Anchorman 2
+    url = 'http://www.imdb.com/title/tt1229340/';
 
-    var SubmitButton = document.getElementById("linkButton");
+    request(url, function(error, response, html){
+        if(!error){
+            var $ = cheerio.load(html);
 
+            var title, release, rating;
+            var json = { title : "", release : "", rating : ""};
 
-    var UrlLocation;
-    var url;
+            $('.title_wrapper').filter(function(){
+                var data = $(this);
+                title = data.children().first().text().trim();
+                release = data.children().last().children().last().text().trim();
 
-    //Function that saves the provided link by the user
+                json.title = title;
+                json.release = release;
+            })
 
-    SubmitButton.onclick = function () {
-        UrlLocation = document.getElementById("linkArea").value;
-        url = UrlLocation;
-        console.log(UrlLocation);
-    }
+            $('.ratingValue').filter(function(){
+                var data = $(this);
+                rating = data.text().trim();
 
-    //The function for the scraping
+                json.rating = rating;
+            })
+        }
 
-    app.get('/scrape', function (req, res) {
-
-        //this is the callback function
-        request(url, function (error, response, html) {
-
-
-            //error handling first
-            if (error === false) {
-
-                //here we use cheerio on the html that we get returned to give us the jquery functional
-
-                var cher = cheerio.load(html);
-
-                //We choose the thing that is closest to the object we are looking to obtain
-                //in this case, it was the OL (ordered list)
-                cher('.ol').filter(function () {
-
-                    //we store the data we scrape in this variable.
-                    var data = cher(this);
-
-                    //process to take out the link for the first section
-                    firstLink = data.children().first().text();
-
-                    //same process for the last link
-                    thirdLink = data.children().first().text();
-
-
-                    //now we store it in the json object
-                    json.firstLink = firstLink;
-                    json.thirdLink = thirdLink;
-                })
-            }
-
+        fs.writeFile('output.json', JSON.stringify(json, null, 4), function(err){
+            console.log('File successfully written! - Check your project directory for the output.json file');
         })
 
+        res.send('Check your console!')
     })
+})
+
+app.listen('8081')
+console.log('Magic happens on port 8081');
+exports = module.exports = app;
+
+*/
+/*
+var scrape = function() {
+
+    var request = require('request');
+    var cheerio = require('cheerio');
+
+    request('http://vhost3.lnu.se:20080/weekend', function (error, response, html) {
+        if (!error && response.statusCode == 200) {
+            var cher = cheerio.load(html);
+            cher('ol').filter(function(){
+
+                var json = { title : "", release : "", rating : ""};
+                var data = cher(this);
+                var title = data.children().text();
+                json.title = title;
+
+                //console.log(things);
+               // document.getElementById("ratingSpot").innerText = data;
+            })
+        }
+    });
+
+}
+scrape();
+*/
+
+var scrape = function() {
+
+
+//request is a modul that can be used for anything.
+    var request =  require('request');
+
+// cheerio is a jquery manipulation modul
+    var cheerio = require('cheerio');
+
+
+
+    var urls = [];
+
+//we use reddit as a test, there is alos a callback function with error, response and body as parameters.
+
+    request('http://vhost3.lnu.se:20080/weekend', function (err, resp, body){
+
+        //if there is no error
+        if(err == false && resp.statusCode == 200){
+            //this parses the body in cheerio and make it available for manipulation and we save it to a variable
+            // $ which is the most famous thing for cheerio (especially in JQuery).
+            var $ = cheerio.load(body);
+
+            //here we use the JQuery selector on the id "siteTable". This will load all links "a" that has the class
+            //title in them. And then we search in the context siteTable. We then use .each (from foreach loop) to get the
+            //href attributes and we save that in the array, and then we push it on the URl array.
+
+            $('ol').each(function(){
+
+                var urls = this.attribute('li');
+                urls.push(url);
+            });
+
+            //now we test it.
+            console.log("hejhej");
+        }
+    });
+
 
 }
 scrape();
